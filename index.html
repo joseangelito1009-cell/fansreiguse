@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#090811" />
+  <meta name="description" content="Zona de suscriptores de Reiguse: envía sugerencias, comparte tus niveles de Geometry Dash y pide un saludo." />
+  <title>Zona de Subs | Reiguse</title>
+  <style>
+    :root {
+      --bg: #090811;
+      --panel: rgba(20, 17, 36, .88);
+      --panel-2: #151126;
+      --line: rgba(180, 151, 255, .18);
+      --text: #f7f3ff;
+      --muted: #aaa4c1;
+      --purple: #a86bff;
+      --pink: #ff58c7;
+      --cyan: #61e8ff;
+      --green: #8dffbb;
+      --danger: #ff819b;
+      --radius: 22px;
+      --shadow: 0 18px 55px rgba(0,0,0,.28);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(ellipse at 15% -5%, rgba(138, 64, 255, .23), transparent 36%),
+        radial-gradient(ellipse at 100% 30%, rgba(255, 65, 195, .10), transparent 32%),
+        var(--bg);
+      min-height: 100vh;
+    }
+    body::before {
+      content: ""; position: fixed; inset: 0; pointer-events: none; z-index: -1;
+      background-image: linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: linear-gradient(to bottom, black, transparent 85%);
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input, textarea, select { font: inherit; }
+    button { cursor: pointer; }
+    .shell { width: min(1160px, calc(100% - 36px)); margin: 0 auto; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; gap: 18px; padding: 22px 0; }
+    .brand { display: inline-flex; align-items: center; gap: 12px; font-weight: 900; letter-spacing: -.04em; font-size: 1.16rem; }
+    .brand-mark { width: 40px; height: 40px; border-radius: 13px; display: grid; place-items: center; background: linear-gradient(140deg, var(--purple), var(--pink)); box-shadow: 0 0 28px rgba(168,107,255,.32); color: #fff; font-size: 1.12rem; transform: rotate(-5deg); }
+    .brand small { display: block; color: var(--muted); font-size: .68rem; letter-spacing: .15em; text-transform: uppercase; margin-top: 1px; font-weight: 750; }
+    .nav { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; justify-content: flex-end; }
+    .nav a { color: var(--muted); font-size: .88rem; font-weight: 700; padding: 10px 13px; border-radius: 12px; transition: .18s ease; }
+    .nav a:hover { color: white; background: rgba(255,255,255,.06); }
+    .nav .nav-cta { color: white; border: 1px solid rgba(168,107,255,.4); background: rgba(168,107,255,.12); }
+    .hero { position: relative; overflow: hidden; padding: 56px clamp(24px, 5vw, 62px); margin: 15px 0 28px; border: 1px solid var(--line); border-radius: 30px; background: linear-gradient(115deg, rgba(32,22,58,.96), rgba(17,14,30,.94) 58%, rgba(46,17,53,.86)); box-shadow: var(--shadow); }
+    .hero::before { content: ""; position: absolute; width: 310px; height: 310px; right: 5%; top: -145px; border: 1px solid rgba(255,255,255,.10); border-radius: 50%; box-shadow: 0 0 0 35px rgba(255,255,255,.018), 0 0 0 70px rgba(255,255,255,.014); }
+    .hero::after { content: "✦"; position: absolute; right: 14%; bottom: 8%; font-size: clamp(3rem, 8vw, 7rem); color: rgba(255,255,255,.07); transform: rotate(13deg); }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(141,255,187,.24); color: var(--green); background: rgba(141,255,187,.07); padding: 7px 11px; border-radius: 100px; text-transform: uppercase; letter-spacing: .12em; font-size: .7rem; font-weight: 850; }
+    .pulse { width: 7px; height: 7px; background: var(--green); border-radius: 50%; box-shadow: 0 0 12px var(--green); }
+    h1 { position: relative; z-index: 1; max-width: 720px; margin: 20px 0 15px; font-size: clamp(2.5rem, 6.2vw, 5.3rem); line-height: .98; letter-spacing: -.065em; }
+    .gradient-text { color: transparent; background: linear-gradient(95deg, #c9a9ff 5%, #ff79d6 54%, #7cecff 100%); -webkit-background-clip: text; background-clip: text; }
+    .hero p { position: relative; z-index: 1; color: #c4bdd9; max-width: 590px; line-height: 1.75; font-size: 1.02rem; margin: 0 0 24px; }
+    .hero-actions { position: relative; z-index: 1; display: flex; gap: 11px; flex-wrap: wrap; }
+    .btn { border: 0; border-radius: 13px; padding: 12px 17px; color: white; font-weight: 850; font-size: .9rem; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: transform .18s ease, filter .18s ease, background .18s ease; }
+    .btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+    .btn-primary { background: linear-gradient(105deg, #9255f7, #d34fc9); box-shadow: 0 10px 24px rgba(168,107,255,.19); }
+    .btn-secondary { background: rgba(255,255,255,.055); border: 1px solid rgba(255,255,255,.12); color: #e8e1f8; }
+    .btn-danger { background: rgba(255,129,155,.1); color: #ffb1c2; border: 1px solid rgba(255,129,155,.22); }
+    .stats { position: relative; z-index: 1; display: flex; gap: 26px; margin-top: 30px; flex-wrap: wrap; }
+    .stat { display: flex; align-items: center; gap: 9px; color: var(--muted); font-size: .82rem; }
+    .stat strong { color: white; display: block; font-size: 1.02rem; }
+    .stat-icon { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; background: rgba(255,255,255,.07); font-size: 1rem; }
+    .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin: 42px 0 18px; }
+    .section-heading h2 { margin: 0; font-size: clamp(1.45rem, 3vw, 2.05rem); letter-spacing: -.04em; }
+    .section-heading p { margin: 7px 0 0; color: var(--muted); font-size: .9rem; line-height: 1.55; }
+    .section-kicker { color: var(--purple); text-transform: uppercase; font-weight: 900; font-size: .67rem; letter-spacing: .15em; margin-bottom: 8px; }
+    .layout { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(280px, .8fr); gap: 20px; align-items: start; }
+    .panel { border: 1px solid var(--line); background: var(--panel); border-radius: var(--radius); padding: clamp(20px, 3vw, 30px); box-shadow: var(--shadow); backdrop-filter: blur(12px); }
+    .panel-head { display: flex; align-items: center; gap: 13px; margin-bottom: 22px; }
+    .panel-icon { width: 46px; height: 46px; flex: 0 0 auto; display: grid; place-items: center; font-size: 1.35rem; border-radius: 14px; background: linear-gradient(145deg, rgba(168,107,255,.22), rgba(255,88,199,.13)); border: 1px solid rgba(168,107,255,.24); }
+    .panel-head h3 { margin: 0; font-size: 1.16rem; letter-spacing: -.025em; }
+    .panel-head p { margin: 5px 0 0; color: var(--muted); font-size: .82rem; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .field { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+    .field.full { grid-column: 1 / -1; }
+    label { color: #e7e0f5; font-size: .82rem; font-weight: 800; }
+    .optional { color: #827b99; font-weight: 600; font-size: .73rem; }
+    input, select, textarea { width: 100%; border: 1px solid rgba(190,170,235,.18); border-radius: 12px; background: rgba(7,6,16,.68); color: var(--text); outline: none; padding: 12px 13px; transition: border-color .18s, box-shadow .18s; }
+    input::placeholder, textarea::placeholder { color: #706a84; }
+    select { appearance: auto; color-scheme: dark; }
+    textarea { min-height: 118px; resize: vertical; line-height: 1.55; }
+    input:focus, select:focus, textarea:focus { border-color: rgba(168,107,255,.82); box-shadow: 0 0 0 3px rgba(168,107,255,.12); }
+    .hint { color: #8e87a4; font-size: .75rem; line-height: 1.5; }
+    .counter { align-self: end; color: #817994; font-size: .73rem; margin-top: -2px; }
+    .form-bottom { display: flex; align-items: center; justify-content: space-between; gap: 15px; flex-wrap: wrap; margin-top: 19px; }
+    .form-bottom .hint { max-width: 300px; }
+    .side-stack { display: grid; gap: 18px; }
+    .feature-card { position: relative; overflow: hidden; border: 1px solid var(--line); background: linear-gradient(140deg, rgba(25,20,44,.95), rgba(16,13,28,.95)); border-radius: 19px; padding: 22px; }
+    .feature-card::after { content: attr(data-symbol); position: absolute; font-size: 5.2rem; right: 13px; bottom: -14px; opacity: .075; transform: rotate(-12deg); pointer-events: none; }
+    .feature-top { display: flex; align-items: center; gap: 11px; margin-bottom: 12px; }
+    .feature-top span { font-size: 1.35rem; }
+    .feature-top h3 { margin: 0; font-size: 1rem; }
+    .feature-card p { margin: 0; color: var(--muted); font-size: .85rem; line-height: 1.65; }
+    .tag { display: inline-flex; padding: 5px 8px; margin-top: 14px; border-radius: 7px; background: rgba(168,107,255,.1); border: 1px solid rgba(168,107,255,.18); color: #c7a8ff; font-size: .69rem; font-weight: 850; letter-spacing: .02em; }
+    .rules { display: grid; gap: 12px; }
+    .rule { display: flex; align-items: flex-start; gap: 10px; color: #c9c1db; font-size: .83rem; line-height: 1.55; }
+    .rule-icon { display: grid; place-items: center; width: 23px; height: 23px; border-radius: 8px; flex: 0 0 auto; color: var(--green); background: rgba(141,255,187,.08); }
+    .vote-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .vote-card { border: 1px solid var(--line); background: var(--panel); border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 9px; min-height: 160px; }
+    .vote-card .emoji { font-size: 1.75rem; }
+    .vote-card h3 { margin: 0; font-size: 1rem; }
+    .vote-card p { color: var(--muted); margin: 0; font-size: .81rem; line-height: 1.55; flex: 1; }
+    .vote-card button { width: 100%; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.11); border-radius: 10px; padding: 9px 10px; color: #e8ddff; font-weight: 800; font-size: .8rem; }
+    .vote-card button:hover { background: rgba(168,107,255,.16); border-color: rgba(168,107,255,.4); }
+    .vote-count { color: var(--cyan); font-size: .73rem; min-height: 13px; }
+    .submissions { margin-top: 18px; }
+    .submission-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 15px; }
+    .submission-toolbar h3 { margin: 0; font-size: 1rem; }
+    .local-note { color: #a9a0bd; font-size: .76rem; line-height: 1.5; background: rgba(255,208,112,.055); border: 1px solid rgba(255,208,112,.17); border-radius: 12px; padding: 12px 14px; margin-bottom: 15px; }
+    .submission-list { display: grid; gap: 10px; }
+    .submission { border: 1px solid rgba(190,170,235,.12); background: rgba(255,255,255,.025); border-radius: 13px; padding: 14px; }
+    .submission-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 7px; }
+    .submission-title { font-weight: 850; font-size: .86rem; }
+    .submission-date { color: #7e7696; font-size: .7rem; }
+    .submission p { margin: 5px 0 0; color: #c1b9d3; font-size: .82rem; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .empty-state { border: 1px dashed rgba(190,170,235,.2); border-radius: 13px; padding: 24px 15px; color: #89819f; text-align: center; font-size: .83rem; line-height: 1.6; }
+    .footer { padding: 35px 0 28px; margin-top: 48px; border-top: 1px solid rgba(190,170,235,.12); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; color: #7f7893; font-size: .78rem; }
+    .footer strong { color: #d7c8f8; }
+    .toast { position: fixed; left: 50%; bottom: 22px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; padding: 12px 17px; border: 1px solid rgba(141,255,187,.25); color: #e5ffef; background: #14251f; border-radius: 13px; box-shadow: var(--shadow); font-weight: 750; font-size: .85rem; transition: .22s ease; z-index: 20; max-width: calc(100% - 30px); text-align: center; }
+    .toast.show { transform: translate(-50%, 0); opacity: 1; }
+    .hidden { display: none !important; }
+    @media (max-width: 850px) { .layout { grid-template-columns: 1fr; } .side-stack { grid-template-columns: repeat(2, minmax(0,1fr)); } .side-stack .feature-card:last-child { grid-column: 1 / -1; } }
+    @media (max-width: 620px) { .shell { width: min(100% - 22px, 1160px); } .topbar { align-items: flex-start; flex-direction: column; } .nav { justify-content: flex-start; width: 100%; gap: 3px; } .nav a { padding: 9px 10px; font-size: .8rem; } .hero { padding: 35px 23px; border-radius: 23px; margin-top: 6px; } .stats { gap: 15px; } .stat { min-width: 42%; } .form-grid { grid-template-columns: 1fr; } .field.full { grid-column: auto; } .side-stack { grid-template-columns: 1fr; } .side-stack .feature-card:last-child { grid-column: auto; } .vote-grid { grid-template-columns: 1fr; } .section-heading { align-items: flex-start; flex-direction: column; } .form-bottom { align-items: stretch; } .form-bottom .btn { width: 100%; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="#inicio" aria-label="Ir al inicio">
+        <span class="brand-mark">R</span>
+        <span>REIGUSE<small>CREW DE SUSCRIPTORES</small></span>
+      </a>
+      <nav class="nav" aria-label="Navegación principal">
+        <a href="#participa">Participa</a>
+        <a href="#votaciones">Votaciones</a>
+        <a href="#reglas">Reglas</a>
+        <a class="nav-cta" href="#participa">✦ Enviar idea</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" id="inicio">
+        <span class="eyebrow"><span class="pulse"></span> Zona oficial de la comunidad</span>
+        <h1>¡Bienvenido a la<br><span class="gradient-text">zona de subs!</span></h1>
+        <p>Este es tu espacio en la comunidad de <strong>Reiguse</strong>. Deja tus sugerencias, comparte tu nivel de Geometry Dash, pide un saludo para el próximo video o propón un reto. ¡Tu idea puede aparecer en el canal!</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#participa">🚀 Participar ahora <span aria-hidden="true">↗</span></a>
+          <a class="btn btn-secondary" href="#votaciones">🎮 Elegir próximo contenido</a>
+        </div>
+        <div class="stats" aria-label="Qué puedes hacer">
+          <div class="stat"><span class="stat-icon">💡</span><span><strong>Da ideas</strong>Sugerencias para videos</span></div>
+          <div class="stat"><span class="stat-icon">🟪</span><span><strong>Comparte niveles</strong>Geometry Dash</span></div>
+          <div class="stat"><span class="stat-icon">👋</span><span><strong>Pide tu saludo</strong>Deja tu usuario</span></div>
+        </div>
+      </section>
+
+      <div class="section-heading" id="participa">
+        <div><div class="section-kicker">Tu momento</div><h2>¿Qué quieres enviarle a Reiguse?</h2><p>Rellena lo que corresponda y deja tu huella en la comunidad.</p></div>
+      </div>
+
+      <section class="layout">
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-icon">✍️</div>
+            <div><h3>Formulario de la comunidad</h3><p>Sugerencias, niveles, saludos y desafíos.</p></div>
+          </div>
+          <form id="communityForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="type">¿Qué vas a enviar? *</label>
+                <select id="type" name="type" required>
+                  <option value="sugerencia">💡 Sugerencia para un video</option>
+                  <option value="nivel">🟪 Mi nivel de Geometry Dash</option>
+                  <option value="saludo">👋 Quiero un saludo</option>
+                  <option value="reto">🔥 Un reto para Reiguse</option>
+                  <option value="juego">🎮 Juego que debería probar</option>
+                  <option value="otro">✨ Otra idea</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="username">Tu usuario *</label>
+                <input id="username" name="username" maxlength="40" required placeholder="Ej.: @TuUsuario" autocomplete="nickname" />
+                <span class="hint">Para el saludo, escribe cómo quieres que aparezca tu nombre.</span>
+              </div>
+              <div class="field hidden" id="levelField">
+                <label for="levelId">ID de tu nivel de Geometry Dash *</label>
+                <input id="levelId" name="levelId" maxlength="30" inputmode="numeric" placeholder="Ej.: 12345678" />
+                <span class="hint">Escribe el ID numérico del nivel, no tu contraseña.</span>
+              </div>
+              <div class="field hidden" id="gameField">
+                <label for="gameName">Nombre del juego *</label>
+                <input id="gameName" name="gameName" maxlength="70" placeholder="¿Qué juego quieres que pruebe?" />
+              </div>
+              <div class="field full">
+                <label for="message" id="messageLabel">Cuéntame tu idea *</label>
+                <textarea id="message" name="message" maxlength="700" required placeholder="Escribe aquí tu sugerencia, el reto o cualquier idea para el canal..."></textarea>
+                <span class="counter"><span id="charCount">0</span>/700 caracteres</span>
+              </div>
+              <div class="field full">
+                <label for="extra">Detalle extra <span class="optional">(opcional)</span></label>
+                <input id="extra" name="extra" maxlength="150" placeholder="Ej.: parte favorita, dificultad del nivel o cuándo jugarlo" />
+              </div>
+            </div>
+            <div class="form-bottom">
+              <span class="hint">No escribas contraseñas ni datos privados. Sé respetuoso con la comunidad.</span>
+              <button class="btn btn-primary" type="submit">Guardar participación ✦</button>
+            </div>
+          </form>
+        </div>
+
+        <aside class="side-stack">
+          <article class="feature-card" data-symbol="◈">
+            <div class="feature-top"><span>🟪</span><h3>Rincón de Geometry Dash</h3></div>
+            <p>¿Tienes un nivel increíble? Selecciona “Mi nivel de Geometry Dash” y pon su ID para que Reiguse pueda encontrarlo y considerar jugarlo.</p>
+            <span class="tag">COMPARTE TU NIVEL</span>
+          </article>
+          <article class="feature-card" data-symbol="★">
+            <div class="feature-top"><span>👋</span><h3>¡Quiero mi saludo!</h3></div>
+            <p>Elige “Quiero un saludo”, escribe tu usuario como quieres que se vea y deja un mensaje corto. Tu saludo puede ser elegido para un video.</p>
+            <span class="tag">TU MOMENTO DE BRILLAR</span>
+          </article>
+          <article class="feature-card" id="reglas" data-symbol="✓">
+            <div class="feature-top"><span>📜</span><h3>Reglas de la zona</h3></div>
+            <div class="rules">
+              <div class="rule"><span class="rule-icon">✓</span><span>Respeta a Reiguse y a los demás suscriptores.</span></div>
+              <div class="rule"><span class="rule-icon">✓</span><span>Envía IDs correctos y sugerencias claras.</span></div>
+              <div class="rule"><span class="rule-icon">✓</span><span>No envíes spam, insultos ni enlaces sospechosos.</span></div>
+              <div class="rule"><span class="rule-icon">✓</span><span>Enviar una idea no garantiza que aparezca en un video.</span></div>
+            </div>
+          </article>
+        </aside>
+      </section>
+
+      <section id="votaciones">
+        <div class="section-heading">
+          <div><div class="section-kicker">La comunidad decide</div><h2>¿Qué contenido hacemos después?</h2><p>Vota por tu tipo de video favorito. Los votos de esta demo se guardan en este navegador.</p></div>
+        </div>
+        <div class="vote-grid">
+          <article class="vote-card"><span class="emoji">🟪</span><h3>Geometry Dash</h3><p>Niveles de subs, retos difíciles y momentos épicos.</p><button type="button" data-vote="Geometry Dash">Votar por Geometry Dash</button><span class="vote-count" id="count-Geometry-Dash">0 votos aquí</span></article>
+          <article class="vote-card"><span class="emoji">😂</span><h3>Retos y reacciones</h3><p>Videos divertidos, retos de la comunidad y reacciones.</p><button type="button" data-vote="Retos y reacciones">Votar por retos</button><span class="vote-count" id="count-Retos-y-reacciones">0 votos aquí</span></article>
+          <article class="vote-card"><span class="emoji">🎮</span><h3>Probar juegos</h3><p>Juegos nuevos, recomendaciones y cosas raras de internet.</p><button type="button" data-vote="Probar juegos">Votar por juegos</button><span class="vote-count" id="count-Probar-juegos">0 votos aquí</span></article>
+        </div>
+      </section>
+
+      <section class="submissions" aria-labelledby="submissionsTitle">
+        <div class="section-heading">
+          <div><div class="section-kicker">Tu actividad</div><h2 id="submissionsTitle">Participaciones guardadas</h2><p>Las participaciones creadas en este navegador aparecen aquí.</p></div>
+        </div>
+        <div class="panel">
+          <div class="local-note"><strong>Importante:</strong> esta versión de un solo archivo guarda los datos únicamente en el navegador y dispositivo donde se envían. No le llegan automáticamente a Reiguse ni se comparten entre visitantes. Para recibir participaciones de todos los subs, habría que conectar un formulario o una base de datos online.</div>
+          <div class="submission-toolbar">
+            <h3 id="submissionCount">0 participaciones</h3>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="btn btn-secondary" id="exportBtn" type="button">⬇ Exportar datos</button>
+              <button class="btn btn-danger" id="clearBtn" type="button">Borrar guardados</button>
+            </div>
+          </div>
+          <div class="submission-list" id="submissionList"><div class="empty-state">Todavía no hay participaciones guardadas.<br>¡Sé el primero en dejar una idea!</div></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer"><span>© <span id="year"></span> <strong>Reiguse</strong> · Zona de suscriptores</span><span>Hecho para la comunidad ✦</span></footer>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      const $ = (selector) => document.querySelector(selector);
+      const form = $('#communityForm');
+      const type = $('#type');
+      const levelField = $('#levelField');
+      const gameField = $('#gameField');
+      const levelId = $('#levelId');
+      const gameName = $('#gameName');
+      const message = $('#message');
+      const charCount = $('#charCount');
+      const list = $('#submissionList');
+      const toast = $('#toast');
+      const STORAGE_KEY = 'reiguse_zone_submissions_v1';
+      const VOTE_KEY = 'reiguse_zone_votes_v1';
+      let toastTimer;
+
+      const readArray = (key) => {
+        try {
+          const value = JSON.parse(localStorage.getItem(key) || '[]');
+          return Array.isArray(value) ? value : [];
+        } catch (_) { return []; }
+      };
+      const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      })[char]);
+      const showToast = (text) => {
+        toast.textContent = text;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+      };
+      const prettyType = (value) => ({
+        sugerencia: '💡 Sugerencia para un video',
+        nivel: '🟪 Nivel de Geometry Dash',
+        saludo: '👋 Petición de saludo',
+        reto: '🔥 Reto para Reiguse',
+        juego: '🎮 Juego para probar',
+        otro: '✨ Otra idea'
+      })[value] || 'Participación';
+
+      function updateFields() {
+        const selected = type.value;
+        levelField.classList.toggle('hidden', selected !== 'nivel');
+        gameField.classList.toggle('hidden', selected !== 'juego');
+        levelId.required = selected === 'nivel';
+        gameName.required = selected === 'juego';
+        if (selected === 'nivel') {
+          $('#messageLabel').textContent = '¿Qué tiene de especial tu nivel? *';
+          message.placeholder = 'Dificultad, nombre del nivel o qué parte quieres que intente...';
+        } else if (selected === 'saludo') {
+          $('#messageLabel').textContent = 'Escribe tu mensaje para el saludo *';
+          message.placeholder = 'Ej.: ¡Saludos, Reiguse! Soy tu suscriptor desde...';
+        } else if (selected === 'reto') {
+          $('#messageLabel').textContent = 'Describe el reto *';
+          message.placeholder = 'Explica las reglas o el desafío que propones...';
+        } else if (selected === 'juego') {
+          $('#messageLabel').textContent = '¿Por qué debería probarlo? *';
+          message.placeholder = 'Dime qué lo hace divertido o especial...';
+        } else {
+          $('#messageLabel').textContent = 'Cuéntame tu idea *';
+          message.placeholder = 'Escribe aquí tu sugerencia o cualquier idea para el canal...';
+        }
+      }
+
+      function renderSubmissions() {
+        const submissions = readArray(STORAGE_KEY);
+        $('#submissionCount').textContent = `${submissions.length} ${submissions.length === 1 ? 'participación' : 'participaciones'}`;
+        if (!submissions.length) {
+          list.innerHTML = '<div class="empty-state">Todavía no hay participaciones guardadas.<br>¡Sé el primero en dejar una idea!</div>';
+          return;
+        }
+        list.innerHTML = submissions.slice().reverse().map((item) => {
+          const detail = [item.levelId ? `ID del nivel: ${item.levelId}` : '', item.gameName ? `Juego: ${item.gameName}` : '', item.extra ? `Extra: ${item.extra}` : ''].filter(Boolean).join(' · ');
+          return `<article class="submission"><div class="submission-head"><span class="submission-title">${escapeHtml(prettyType(item.type))}</span><span class="submission-date">${escapeHtml(item.date || '')}</span></div><p><strong>Usuario:</strong> ${escapeHtml(item.username)}</p><p>${escapeHtml(item.message)}</p>${detail ? `<p>${escapeHtml(detail)}</p>` : ''}</article>`;
+        }).join('');
+      }
+
+      function renderVotes() {
+        const votes = readArray(VOTE_KEY);
+        const counts = {};
+        votes.forEach((vote) => { counts[vote.choice] = (counts[vote.choice] || 0) + 1; });
+        document.querySelectorAll('[data-vote]').forEach((button) => {
+          const choice = button.dataset.vote;
+          const id = 'count-' + choice.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '');
+          const target = document.getElementById(id);
+          if (target) target.textContent = `${counts[choice] || 0} ${counts[choice] === 1 ? 'voto aquí' : 'votos aquí'}`;
+        });
+      }
+
+      type.addEventListener('change', updateFields);
+      message.addEventListener('input', () => { charCount.textContent = message.value.length; });
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (!form.reportValidity()) return;
+        const selected = type.value;
+        const cleanLevelId = levelId.value.trim();
+        if (selected === 'nivel' && !/^\d+$/.test(cleanLevelId)) {
+          levelId.setCustomValidity('El ID del nivel debe contener solo números.');
+          levelId.reportValidity();
+          levelId.setCustomValidity('');
+          return;
+        }
+        const submissions = readArray(STORAGE_KEY);
+        submissions.push({
+          id: (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()),
+          type: selected,
+          username: $('#username').value.trim(),
+          levelId: selected === 'nivel' ? cleanLevelId : '',
+          gameName: selected === 'juego' ? gameName.value.trim() : '',
+          message: message.value.trim(),
+          extra: $('#extra').value.trim(),
+          date: new Date().toLocaleString('es-DO', { dateStyle: 'medium', timeStyle: 'short' })
+        });
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(submissions));
+          renderSubmissions();
+          form.reset();
+          charCount.textContent = '0';
+          updateFields();
+          showToast('¡Participación guardada en este dispositivo! ✦');
+          $('#submissionsTitle').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } catch (_) {
+          showToast('No se pudo guardar. Revisa el espacio disponible del navegador.');
+        }
+      });
+
+      document.querySelectorAll('[data-vote]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const votes = readArray(VOTE_KEY);
+          const existing = votes.find((vote) => vote.deviceToken === 'this-browser');
+          if (existing) {
+            showToast('Ya votaste desde este navegador. ¡Gracias!');
+            return;
+          }
+          votes.push({ choice: button.dataset.vote, deviceToken: 'this-browser', date: new Date().toISOString() });
+          try {
+            localStorage.setItem(VOTE_KEY, JSON.stringify(votes));
+            renderVotes();
+            showToast(`¡Voto guardado: ${button.dataset.vote}!`);
+          } catch (_) { showToast('No se pudo guardar tu voto en este navegador.'); }
+        });
+      });
+
+      $('#exportBtn').addEventListener('click', () => {
+        const data = { exportedAt: new Date().toISOString(), submissions: readArray(STORAGE_KEY), votes: readArray(VOTE_KEY) };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = 'reiguse-participaciones.json';
+        document.body.appendChild(anchor);
+        anchor.click();
+        anchor.remove();
+        URL.revokeObjectURL(url);
+        showToast('Archivo de datos exportado.');
+      });
+
+      $('#clearBtn').addEventListener('click', () => {
+        if (!readArray(STORAGE_KEY).length && !readArray(VOTE_KEY).length) {
+          showToast('No hay datos guardados para borrar.');
+          return;
+        }
+        if (!window.confirm('¿Seguro que quieres borrar las participaciones y los votos guardados en este navegador?')) return;
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(VOTE_KEY);
+        renderSubmissions();
+        renderVotes();
+        showToast('Datos guardados borrados de este navegador.');
+      });
+
+      $('#year').textContent = new Date().getFullYear();
+      updateFields();
+      renderSubmissions();
+      renderVotes();
+    })();
+  </script>
+</body>
+</html>
